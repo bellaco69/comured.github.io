@@ -1,0 +1,372 @@
+<html>
+ <head>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <style>
+   body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+        }
+        .hover-purple:hover {
+            color: #6b46c1;
+        }
+        .hidden {
+            display: none;
+        }
+        .active {
+            color: #6b46c1;
+        }
+        .community-item {
+            transition: transform 0.2s;
+        }
+        .community-item:hover {
+            transform: scale(1.05);
+        }
+        .search-input {
+            width: 0;
+            transition: width 0.3s;
+            opacity: 0;
+        }
+        .search-input.active {
+            width: 200px;
+            opacity: 1;
+        }
+        .highlight {
+            color: #3b82f6;
+        }
+  </style>
+  <script>
+   function showSection(sectionId) {
+            // Hide all sections
+            document.getElementById('activity-section').classList.add('hidden');
+            document.getElementById('communities-section').classList.add('hidden');
+            document.getElementById('messages-section').classList.add('hidden');
+            document.getElementById('notifications-section').classList.add('hidden');
+            document.getElementById('close-section').classList.add('hidden');
+            document.getElementById('chat-section').classList.add('hidden');
+
+            // Show the selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Remove active class from all menu items
+            document.getElementById('activity-menu').classList.remove('active');
+            document.getElementById('communities-menu').classList.remove('active');
+            document.getElementById('messages-menu').classList.remove('active');
+            document.getElementById('notifications-menu').classList.remove('active');
+            document.getElementById('close-menu').classList.remove('active');
+
+            // Add active class to the selected menu item
+            if (sectionId === 'activity-section') {
+                document.getElementById('activity-menu').classList.add('active');
+            } else if (sectionId === 'communities-section') {
+                document.getElementById('communities-menu').classList.add('active');
+            } else if (sectionId === 'messages-section') {
+                document.getElementById('messages-menu').classList.add('active');
+            } else if (sectionId === 'notifications-section') {
+                document.getElementById('notifications-menu').classList.add('active');
+            } else if (sectionId === 'close-section') {
+                document.getElementById('close-menu').classList.add('active');
+            }
+        }
+
+        function toggleSearch() {
+            const searchInput = document.getElementById('search-input');
+            searchInput.classList.toggle('active');
+            if (searchInput.classList.contains('active')) {
+                searchInput.focus();
+            }
+        }
+
+        function highlightCommunities() {
+            const searchValue = document.getElementById('search-input').value.toLowerCase();
+            const communityItems = document.querySelectorAll('.community-item');
+
+            communityItems.forEach(item => {
+                const communityName = item.querySelector('h3').textContent.toLowerCase();
+                if (searchValue && communityName.includes(searchValue)) {
+                    item.querySelector('h3').classList.add('highlight');
+                    item.classList.remove('hidden');
+                } else if (!searchValue) {
+                    item.querySelector('h3').classList.remove('highlight');
+                    item.classList.remove('hidden');
+                } else {
+                    item.querySelector('h3').classList.remove('highlight');
+                    item.classList.add('hidden');
+                }
+            });
+        }
+
+        function showChat(communityName) {
+            document.getElementById('communities-section').classList.add('hidden');
+            document.getElementById('chat-section').classList.remove('hidden');
+            document.getElementById('chat-title').textContent = communityName;
+        }
+  </script>
+ </head>
+ <body class="flex">
+  <!-- Sidebar -->
+  <div class="w-1/4 bg-gray-100 p-4">
+   <div class="flex items-center mb-6">
+    <img alt="User profile picture" class="rounded-full" height="50" src="https://storage.googleapis.com/a1aa/image/5nPyXlTaBu6TMNKYjbk3GXch6G4oufgshtO73F11jf0fg2pnA.jpg" width="50"/>
+    <span class="ml-4 text-lg">
+     Perfil
+    </span>
+   </div>
+   <div class="mb-6 hover-purple cursor-pointer" id="activity-menu" onclick="showSection('activity-section')">
+    <i class="fas fa-home text-2xl">
+    </i>
+    <span class="ml-4 text-lg">
+     Registro de actividad
+    </span>
+   </div>
+   <div class="mb-6 hover-purple cursor-pointer" id="communities-menu" onclick="showSection('communities-section')">
+    <i class="fas fa-users text-2xl">
+    </i>
+    <span class="ml-4 text-lg">
+     Comunidades
+    </span>
+   </div>
+   <div class="mb-6 hover-purple cursor-pointer" id="messages-menu" onclick="showSection('messages-section')">
+    <i class="fas fa-envelope text-2xl">
+    </i>
+    <span class="ml-4 text-lg">
+     Mensajes
+    </span>
+   </div>
+   <div class="mb-6 hover-purple cursor-pointer" id="notifications-menu" onclick="showSection('notifications-section')">
+    <i class="fas fa-bell text-2xl">
+    </i>
+    <span class="ml-4 text-lg">
+     Notificaciones
+    </span>
+   </div>
+   <div class="hover-purple cursor-pointer" id="close-menu" onclick="showSection('close-section')">
+    <i class="fas fa-times text-2xl">
+    </i>
+    <span class="ml-4 text-lg">
+     Cerrar
+    </span>
+   </div>
+  </div>
+  <!-- Main Content -->
+  <div class="w-3/4 p-4">
+   <!-- Activity Section -->
+   <div class="hidden" id="activity-section">
+    <h1 class="text-2xl mb-4">
+     Registro de actividad
+    </h1>
+    <p>
+     Aquí se muestra el registro de actividad.
+    </p>
+   </div>
+   <!-- Communities Section -->
+   <div id="communities-section">
+    <div class="flex justify-between items-center mb-4">
+     <div class="flex items-center">
+      <h1 class="text-2xl mr-4">
+       Comunidades
+      </h1>
+      <i class="fas fa-search text-2xl text-gray-500 cursor-pointer" onclick="toggleSearch()">
+      </i>
+      <input class="search-input shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-2" id="search-input" oninput="highlightCommunities()" placeholder="Buscar..." type="text"/>
+     </div>
+    </div>
+    <div class="bg-purple-500 text-white p-2 rounded-lg mb-4">
+     <h2 class="text-lg">
+      Lugares populares
+     </h2>
+    </div>
+    <div class="grid grid-cols-2 gap-4 mb-4" id="community-list">
+     <div class="flex items-center bg-white p-2 rounded-lg shadow community-item cursor-pointer" onclick="showChat('Homebrew Community')">
+      <img alt="Homebrew Community image" class="rounded-lg" height="50" src="https://storage.googleapis.com/a1aa/image/wYwxB2UUvA5wK9yfCdPrVzed9vfetoB4oMJrwEa7JLZJCtTPB.jpg" width="50"/>
+      <div class="ml-4">
+       <h3 class="text-lg">
+        Homebrew Community
+       </h3>
+       <p class="text-gray-500">
+        4519 Seguidores
+       </p>
+      </div>
+     </div>
+     <div class="flex items-center bg-white p-2 rounded-lg shadow community-item cursor-pointer" onclick="showChat('Splatoon')">
+      <img alt="Splatoon image" class="rounded-lg" height="50" src="https://storage.googleapis.com/a1aa/image/cdVVDCmzFu4pG5mi7fQTcDvNHrnbvXgxhUb9fWZMOanaQ70TA.jpg" width="50"/>
+      <div class="ml-4">
+       <h3 class="text-lg">
+        Splatoon
+       </h3>
+       <p class="text-gray-500">
+        3179 Seguidores
+       </p>
+      </div>
+     </div>
+     <div class="flex items-center bg-white p-2 rounded-lg shadow community-item cursor-pointer" onclick="showChat('Mario Kart 8')">
+      <img alt="Mario Kart 8 image" class="rounded-lg" height="50" src="https://storage.googleapis.com/a1aa/image/6TaPNesYpJ20Pyelwkm4aesNrNNrNtKkvWb9dVjfQQy0BtTPB.jpg" width="50"/>
+      <div class="ml-4">
+       <h3 class="text-lg">
+        Mario Kart 8
+       </h3>
+       <p class="text-gray-500">
+        2222 Seguidores
+       </p>
+      </div>
+     </div>
+     <div class="flex items-center bg-white p-2 rounded-lg shadow community-item cursor-pointer" onclick="showChat('Minecraft')">
+      <img alt="Minecraft image" class="rounded-lg" height="50" src="https://storage.googleapis.com/a1aa/image/cmBT0rWhjAJaBZGmxLR0bM03we8dpl2SyeM69esr1GsLh2pnA.jpg" width="50"/>
+      <div class="ml-4">
+       <h3 class="text-lg">
+        Minecraft
+       </h3>
+       <p class="text-gray-500">
+        1296 Seguidores
+       </p>
+      </div>
+     </div>
+     <div class="flex items-center bg-white p-2 rounded-lg shadow community-item cursor-pointer" onclick="showChat('Super Mario Maker')">
+      <img alt="Super Mario Maker image" class="rounded-lg" height="50" src="https://storage.googleapis.com/a1aa/image/WeoijwfxoUqDZEUYJF9pwinQYelGpeG8NBOrPQdnyXvdCtTPB.jpg" width="50"/>
+      <div class="ml-4">
+       <h3 class="text-lg">
+        Super Mario Maker
+       </h3>
+       <p class="text-gray-500">
+        1718 Seguidores
+       </p>
+      </div>
+     </div>
+     <div class="flex items-center bg-white p-2 rounded-lg shadow community-item cursor-pointer" onclick="showChat('New Super Luigi U')">
+      <img alt="New Super Luigi U image" class="rounded-lg" height="50" src="https://storage.googleapis.com/a1aa/image/eYlNB9ebA1lveIe3oxuEY9lolF5HabC7WdAO2Y9PnsgMCtTPB.jpg" width="50"/>
+      <div class="ml-4">
+       <h3 class="text-lg">
+        New Super Luigi U
+       </h3>
+       <p class="text-gray-500">
+        499 Seguidores
+       </p>
+      </div>
+     </div>
+     <div class="flex items-center bg-white p-2 rounded-lg shadow community-item cursor-pointer" onclick="showChat('Art Community')">
+      <img alt="Art Community image" class="rounded-lg" height="50" src="https://storage.googleapis.com/a1aa/image/reYiACBd2p23VSN1wJvj9Zoay3TLhXuGr00k6ZTRsm5Nod6JA.jpg" width="50"/>
+      <div class="ml-4">
+       <h3 class="text-lg">
+        Art Community
+       </h3>
+       <p class="text-gray-500">
+        1948 Seguidores
+       </p>
+      </div>
+     </div>
+     <div class="flex items-center bg-white p-2 rounded-lg shadow community-item cursor-pointer" onclick="showChat('Pretendo Art Collab')">
+      <img alt="Pretendo Art Collab image" class="rounded-lg" height="50" src="https://storage.googleapis.com/a1aa/image/KhbE6eSbTcVqbCb3e5Kh9XaQVEncwisVemCG50LWyl5xg2pnA.jpg" width="50"/>
+      <div class="ml-4">
+       <h3 class="text-lg">
+        Pretendo Art Collab
+       </h3>
+       <p class="text-gray-500">
+        872 Seguidores
+       </p>
+      </div>
+     </div>
+     <div class="flex items-center bg-white p-2 rounded-lg shadow community-item cursor-pointer" onclick="showChat('The Wind Waker HD')">
+      <img alt="The Wind Waker HD image" class="rounded-lg" height="50" src="https://storage.googleapis.com/a1aa/image/b3AztfLRgxRed06Xf2o5uoSYedW2ksiJB1mjsPHe4SaHEaneE.jpg" width="50"/>
+      <div class="ml-4">
+       <h3 class="text-lg">
+        The Wind Waker HD
+       </h3>
+       <p class="text-gray-500">
+        651 Seguidores
+       </p>
+      </div>
+     </div>
+    </div>
+    <div class="bg-green-500 text-white p-2 rounded-lg mb-4">
+     <h2 class="text-lg">
+      Nuevas comunidades
+     </h2>
+    </div>
+    <div class="grid grid-cols-2 gap-4" id="new-community-list">
+     <div class="flex items-center bg-white p-2 rounded-lg shadow community-item cursor-pointer" onclick="showChat('Pretendo Art Collab')">
+      <img alt="Pretendo Art Collab image" class="rounded-lg" height="50" src="https://storage.googleapis.com/a1aa/image/KhbE6eSbTcVqbCb3e5Kh9XaQVEncwisVemCG50LWyl5xg2pnA.jpg" width="50"/>
+      <div class="ml-4">
+       <h3 class="text-lg">
+        Pretendo Art Collab
+       </h3>
+       <p class="text-gray-500">
+        872 Seguidores
+       </p>
+      </div>
+     </div>
+     <div class="flex items-center bg-white p-2 rounded-lg shadow community-item cursor-pointer" onclick="showChat('The Legend of Zelda: Tri Force')">
+      <img alt="The Legend of Zelda: Tri Force image" class="rounded-lg" height="50" src="https://storage.googleapis.com/a1aa/image/KPFbOe2a3d0UAyJ5WsorXOCX4sUTfal5Ry9i6IfbleXFCtTPB.jpg" width="50"/>
+      <div class="ml-4">
+       <h3 class="text-lg">
+        The Legend of Zelda: Tri Force
+       </h3>
+       <p class="text-gray-500">
+        535 Seguidores
+       </p>
+      </div>
+     </div>
+     <div class="flex items-center bg-white p-2 rounded-lg shadow community-item cursor-pointer" onclick="showChat('Wii Fit U')">
+      <img alt="Wii Fit U image" class="rounded-lg" height="50" src="https://storage.googleapis.com/a1aa/image/Z1bPl3T9IPoADh9wfwMuqOGKhganORLnyXd0bCTDgkKOod6JA.jpg" width="50"/>
+      <div class="ml-4">
+       <h3 class="text-lg">
+        Wii Fit U
+       </h3>
+       <p class="text-gray-500">
+        412 Seguidores
+       </p>
+      </div>
+     </div>
+    </div>
+   </div>
+   <!-- Chat Section -->
+   <div class="hidden" id="chat-section">
+    <div class="flex justify-between items-center mb-4">
+     <h1 class="text-2xl" id="chat-title">
+     </h1>
+     <button class="bg-gray-200 p-2 rounded-lg" onclick="showSection('communities-section')">
+      Volver a comunidades
+     </button>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+     <div class="h-96 overflow-y-scroll mb-4" id="chat-messages">
+      <!-- Chat messages will go here -->
+     </div>
+     <div class="flex">
+      <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="chat-input" placeholder="Escribe un mensaje..." type="text"/>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2" onclick="sendMessage()">
+       Enviar
+      </button>
+     </div>
+    </div>
+   </div>
+   <!-- Messages Section -->
+   <div class="hidden" id="messages-section">
+    <h1 class="text-2xl mb-4">
+     Mensajes
+    </h1>
+    <p>
+     Aquí se muestra el apartado de mensajes.
+    </p>
+   </div>
+   <!-- Notifications Section -->
+   <div class="hidden" id="notifications-section">
+    <h1 class="text-2xl mb-4">
+     Notificaciones
+    </h1>
+    <p>
+     Aquí se muestra el apartado de notificaciones.
+    </p>
+   </div>
+   <!-- Close Section -->
+   <div class="hidden" id="close-section">
+    <h1 class="text-2xl mb-4">
+     Cerrar
+    </h1>
+    <p>
+     Aquí se muestra el apartado de cerrar.
+    </p>
+   </div>
+  </div>
+ </body>
+</html>
